@@ -11,20 +11,40 @@ class ViewController: UIViewController {
     
     lazy var game = ConcrntrationGame(numberOfPairsOfCards: (buttonCollection.count + 1 ) / 2)
 
-    var touches = 0 {
+    var emojiCollection: [String] = []
+    var emojiDictionary = [Int:String]()
+    var emojiThemes: [String: [String]] = [
+        "Sport": ["⚽️", "⚾️", "🥊", "🏋🏻","🏂", "🚴‍♀️","🏊‍♂️", "🪂","🛼", "🏹","🏇", "🏌️"],
+        "Food": ["🌭", "🥓", "🍕", "🍗", "🥘", "🌯","🍜", "🍱", "🥪","🥙", "🧀", "🍳"],
+        "Transport":  ["🚗", "🛴", "🚲","🏍️", "🚃", "⛴️", "✈️", "🚁","🚌", "🏎️", "🚠"],
+        "Fruits": ["🍏", "🍋", "🍉", "🍒", "🥝", "🍍","🥥", "🍌", "🍐","🍊", "🍓", "🍑"],
+        "Animals": ["🐈", "🐇", "🦌", "🦏","🐊", "🦒","🐂", "🐕","🦥", "🦘","🐫", "🐎"],
+        "Countries": ["🇨🇿", "🇨🇮", "🇩🇪", "🇮🇱","🇯🇵", "🇷🇺","🇹🇷", "🇺🇦","🇵🇼", "🇳🇴","🇰🇷", "🇳🇱"],
+        "Zodiac": ["♈︎", "♉︎", "♊︎", "♋︎","♍︎", "♌︎","♎︎", "♐︎","♒︎", "♓︎","♏︎", "♑︎"],
+        "Animals 2": ["🦊","🐼","🐻","🐰","🐨","🐯","🦁","🦍", "🐘","🦈","🦒","🐈"],
+    ]
+    
+    var indexTheme = 0 {
         didSet {
-            touchLabel.text = "Touches: \(touches)"
+            let theme = keys[indexTheme]
+            print (indexTheme, theme)
+            titleLable.text = theme
+            emojiCollection = emojiThemes[theme] ?? []
+            emojiDictionary = [Int: String]()
         }
     }
+    var keys: [String] {
+        return Array(emojiThemes.keys)
+    }
     
-    
-    var emojiCollection = ["🦊","🐼","🐻","🐰","🐨","🐯","🦁","🦍", "🐘","🦈","🦒","🐈"]
-    var emojiDictionary = [Int:String]()
+    override func loadView() {
+        super.loadView()
+        setupGame()
+    }
     
     func emojiIdentifier(for card: Card) -> String {
         if emojiDictionary[card.identifier] == nil {
-            let randomIndex = Int( arc4random_uniform(UInt32(emojiCollection.count)))
-            emojiDictionary[card.identifier] = emojiCollection.remove(at: randomIndex)
+            emojiDictionary[card.identifier] = emojiCollection.remove(at: emojiCollection.count.arc4random)
         }
 //        if emojiDictionary[card.identifier] != nil {
 //            return emojiDictionary[card.identifier]!
@@ -46,25 +66,41 @@ class ViewController: UIViewController {
                 button.backgroundColor = card.isMatched ? #colorLiteral(red: 0.9999960065, green: 1, blue: 1, alpha: 0) : #colorLiteral(red: 0.008634069934, green: 0.4577476978, blue: 0.8880464435, alpha: 1)
             }
         }
+        touchLabel.text = "Touches: \(game.touch)"
+        scoreLabel.text = "Score: \(game.score)"
+        
     }
     
     
+    @IBOutlet weak var scoreLabel: UILabel!
+    @IBAction func newGame(_ sender: UIButton) {
+        game.resetGame()
+        setupGame()
+        updateViewFromModel()
+    }
+    @IBOutlet weak var titleLable: UILabel!
     @IBOutlet var buttonCollection: [UIButton]!
     @IBOutlet weak var touchLabel: UILabel!
     @IBAction func buttonAction(_ sender: UIButton) {
-        touches += 1
         if let buttonIndex = buttonCollection.firstIndex(of: sender) {
             game.chooseCard(at: buttonIndex)
             updateViewFromModel()
     }
         
     }
-
-
-
-
-
-
-
+    
+    func setupGame() {
+        indexTheme = keys.count.arc4random
+    }
 }
-
+extension Int {
+    var arc4random: Int {
+        if self > 0 {
+            return Int(arc4random_uniform(UInt32(self)))
+        } else if self < 0 {
+            return -Int(arc4random_uniform(UInt32(abs(self))))
+        } else {
+            return 0
+        }
+    }
+}
