@@ -18,7 +18,8 @@ struct ConcrntrationGame {
         static let penaltyPoints = 1
     }
     
-    var indexOfOneAndOnlyFaceUpCard: Int? // индекс одной единственной перевернутой вверх карточки
+    var indexOfOneAndOnlyFaceUpCard: Int? 
+   
     mutating func chooseCard(at index: Int) { // алогика игры
         if !cards[index].isMatched { // если нажатая карточка не является совпавшей
             touch += 1
@@ -62,4 +63,9 @@ struct ConcrntrationGame {
         }
     }
 }
-
+extension Collection { // расширение протокола Collection
+    var oneAndOnly:Element? { // Element такой тип который обобщает  Int,String, Double
+        return count == 1 ? first : nil // возврашает одну единственную вещь в коллекции или возвращает nil
+    }
+}
+// count - метод у Collection, сообщает кол-во элементов в коллекции, first метод у Collection возвращающий первый элемент коллекции
