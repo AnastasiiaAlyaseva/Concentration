@@ -1,10 +1,3 @@
-//
-//  ConcentrationGame.swift
-//  Concentration
-//
-//  Created by Anastasiia Alyaseva on 20.10.2022.
-//
-
 import Foundation
 
 struct ConcrntrationGame {
@@ -18,8 +11,8 @@ struct ConcrntrationGame {
         static let penaltyPoints = 1
     }
     
-    var indexOfOneAndOnlyFaceUpCard: Int? 
-   
+    var indexOfOneAndOnlyFaceUpCard: Int?
+    
     mutating func chooseCard(at index: Int) { // алогика игры
         if !cards[index].isMatched { // если нажатая карточка не является совпавшей
             touch += 1
@@ -38,14 +31,14 @@ struct ConcrntrationGame {
             } else {
                 for flipDown in cards.indices { // переворачиваем все карточки лицом вниз и оставляем перевернутой только ту, которую нажали
                     cards[flipDown].isFaceUp = false
-
+                    
                 }
                 cards[index].isFaceUp = true // переворачиваем одну ед.кар. вверх
                 indexOfOneAndOnlyFaceUpCard = index
             }
         }
-        
     }
+    
     mutating func resetGame() {
         touch = 0
         score = 0
@@ -63,9 +56,9 @@ struct ConcrntrationGame {
         }
     }
 }
+
 extension Collection { // расширение протокола Collection
     var oneAndOnly:Element? { // Element такой тип который обобщает  Int,String, Double
         return count == 1 ? first : nil // возврашает одну единственную вещь в коллекции или возвращает nil
     }
-}
-// count - метод у Collection, сообщает кол-во элементов в коллекции, first метод у Collection возвращающий первый элемент коллекции
+} // count - метод у Collection, сообщает кол-во элементов в коллекции, first метод у Collection возвращающий первый элемент коллекции

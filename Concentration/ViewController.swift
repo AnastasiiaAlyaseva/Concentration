@@ -1,19 +1,10 @@
-//
-//  ViewController.swift
-//  Concentration
-//
-//  Created by Anastasiia Alyaseva on 12.10.2022.
-//
-
 import UIKit
 
 class ViewController: UIViewController {
     
     lazy var game = ConcrntrationGame(numberOfPairsOfCards: (buttonCollection.count + 1 ) / 2) //запуск игры
-
     var viewColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
     var cardBackColor = #colorLiteral(red: 0.008634069934, green: 0.4577476978, blue: 0.8880464435, alpha: 1)
-    
     var emojiCollection: [String] = []
     var emojiDictionary = [Card:String]() // ключами в словаре являются сами карты
     var emojiThemes: [gameTheme] = [
@@ -36,20 +27,17 @@ class ViewController: UIViewController {
             viewColor = theme.backroundColor // выводим цвет фона игры
             cardBackColor = theme.cardColor // выводим цвет карты
             updateViewGame()
-            
         }
-        
     }
-
-      //var keys: [String] {
-      // return Array(emojiThemes.keys)
-   //}
-    
+    //var keys: [String] {
+    // return Array(emojiThemes.keys)
+    //}
     
     override func loadView() {
         super.loadView()
         setupGame()
     }
+    
     struct gameTheme { // структура тем игры
         var name: String
         var emojis: [String]
@@ -57,17 +45,15 @@ class ViewController: UIViewController {
         var cardColor: UIColor // цвет "рубашки" карточки
     }
     
-    
-    
     func emojiIdentifier(for card: Card) -> String {// дает каждому индексу карточек emoji с тем же идентификатором что и карточка
         if emojiDictionary[card] == nil {// проверяем есть ли emoji в этом словаре
             emojiDictionary[card] = emojiCollection.remove(at: emojiCollection.count.arc4random)
         } //загружает emoji в словарь из массива emojiCollection по случайному индексу
-//        if emojiDictionary[card.identifier] != nil {
-//            return emojiDictionary[card.identifier]!
-//       } else {
-//            return "?"
-//        }
+        //        if emojiDictionary[card.identifier] != nil {
+        //            return emojiDictionary[card.identifier]!
+        //       } else {
+        //            return "?"
+        //        }
         return emojiDictionary[card] ?? "?" // возвращент значение по ключу
     }
     
@@ -85,11 +71,12 @@ class ViewController: UIViewController {
         }
         touchLabel.text = "Touches: \(game.touch)"
         scoreLabel.text = "Score: \(game.score)"
-        
     }
-   func updateViewGame() {
-     view.backgroundColor = viewColor
-}
+    
+    func updateViewGame() {
+        view.backgroundColor = viewColor
+    }
+    
     override func viewDidLoad() { // заполнение пользовательского интерфейса данными до того, как пользователь их увидит
         super.viewDidLoad()
         updateViewFromModel()
@@ -108,14 +95,14 @@ class ViewController: UIViewController {
         if let buttonIndex = buttonCollection.firstIndex(of: sender) {
             game.chooseCard(at: buttonIndex)
             updateViewFromModel()
-    }
-        
+        }
     }
     
     func setupGame() { // получаем случайный индекс темя напрямую из массива
         indexTheme = emojiThemes.count.arc4random
     }
 }
+
 extension Int {
     var arc4random: Int {
         if self > 0 {
@@ -127,6 +114,3 @@ extension Int {
         }
     }
 }
-
-
-
