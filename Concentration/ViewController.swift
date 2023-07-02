@@ -2,7 +2,15 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    struct gameTheme { // структура тем игры
+        var name: String
+        var emojis: [String]
+        var backroundColor: UIColor // цвет фона игры
+        var cardColor: UIColor // цвет "рубашки" карточки
+    }
+    
     lazy var game = ConcrntrationGame(numberOfPairsOfCards: (buttonCollection.count + 1 ) / 2) //запуск игры
+    
     var viewColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
     var cardBackColor = #colorLiteral(red: 0.008634069934, green: 0.4577476978, blue: 0.8880464435, alpha: 1)
     var emojiCollection: [String] = []
@@ -29,26 +37,39 @@ class ViewController: UIViewController {
             updateViewGame()
         }
     }
-    //var keys: [String] {
-    // return Array(emojiThemes.keys)
-    //}
     
+    @IBOutlet weak var scoreLabel: UILabel!
+    @IBAction func newGame(_ sender: UIButton) {
+        game.resetGame()
+        setupGame()
+        updateViewFromModel()
+    }
+    @IBOutlet weak var titleLable: UILabel!
+    @IBOutlet var buttonCollection: [UIButton]!
+    @IBOutlet weak var touchLabel: UILabel!
+    @IBAction func buttonAction(_ sender: UIButton) { //выполняется при нажатии какой  кнопки
+        if let buttonIndex = buttonCollection.firstIndex(of: sender) {
+            game.chooseCard(at: buttonIndex)
+            updateViewFromModel()
+        }
+    }
+
     override func loadView() {
         super.loadView()
         setupGame()
     }
     
-    struct gameTheme { // структура тем игры
-        var name: String
-        var emojis: [String]
-        var backroundColor: UIColor // цвет фона игры
-        var cardColor: UIColor // цвет "рубашки" карточки
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // заполнение пользовательского интерфейса данными до того, как пользователь их увидит
+        updateViewFromModel()
     }
     
-    func emojiIdentifier(for card: Card) -> String {// дает каждому индексу карточек emoji с тем же идентификатором что и карточка
-        if emojiDictionary[card] == nil {// проверяем есть ли emoji в этом словаре
+    func emojiIdentifier(for card: Card) -> String { // дает каждому индексу карточек emoji с тем же идентификатором что и карточка
+        if emojiDictionary[card] == nil { // проверяем есть ли emoji в этом словаре
+            // загружает emoji в словарь из массива emojiCollection по случайному индексу
             emojiDictionary[card] = emojiCollection.remove(at: emojiCollection.count.arc4random)
-        } //загружает emoji в словарь из массива emojiCollection по случайному индексу
+        }
         //        if emojiDictionary[card.identifier] != nil {
         //            return emojiDictionary[card.identifier]!
         //       } else {
@@ -58,7 +79,8 @@ class ViewController: UIViewController {
     }
     
     func updateViewFromModel() { // обновление вида модели
-        for index in buttonCollection.indices { // проходимся по индексам в массиве кнопок, прописываем что индексы кнопок должны соотвествовать индексу карточек
+        // проходимся по индексам в массиве кнопок, прописываем что индексы кнопок должны соотвествовать индексу карточек
+        for index in buttonCollection.indices {
             let button = buttonCollection[index]
             let card = game.cards[index]
             if card.isFaceUp { // если карточка перевернута вверх
@@ -75,27 +97,6 @@ class ViewController: UIViewController {
     
     func updateViewGame() {
         view.backgroundColor = viewColor
-    }
-    
-    override func viewDidLoad() { // заполнение пользовательского интерфейса данными до того, как пользователь их увидит
-        super.viewDidLoad()
-        updateViewFromModel()
-    }
-    
-    @IBOutlet weak var scoreLabel: UILabel!
-    @IBAction func newGame(_ sender: UIButton) {
-        game.resetGame()
-        setupGame()
-        updateViewFromModel()
-    }
-    @IBOutlet weak var titleLable: UILabel!
-    @IBOutlet var buttonCollection: [UIButton]!
-    @IBOutlet weak var touchLabel: UILabel!
-    @IBAction func buttonAction(_ sender: UIButton) { //выполняется при нажатии какой  кнопки
-        if let buttonIndex = buttonCollection.firstIndex(of: sender) {
-            game.chooseCard(at: buttonIndex)
-            updateViewFromModel()
-        }
     }
     
     func setupGame() { // получаем случайный индекс темя напрямую из массива
