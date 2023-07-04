@@ -9,3 +9,5 @@ The goal of the game is to find a pair of cards to score points.
 4. If cards a pair, points are rewarded and cards removed from layout. If they are not a match, they will be placed back down.
 5. The New Game button ends the current game and starts a new game, changes the theme of the game.
 6. Concentration ends when there are no cards left to match.
+
+This repo keeps track of my progress following Stanford's CS193P course (resources dated 2017-18) - https://www.youtube.com/playlist?list=PL3d_SFOiG7_8ofjyKzX6Nl1wZehbdiZC_
